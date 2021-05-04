@@ -11,7 +11,8 @@ class Chapter extends Model
     protected $table = 'chapters';
     protected $dates =  ['created_at', 'updated_at'];
     protected $fillable = [
-        'id', 'comic_id',
+        'id',
+        'comic_id',
         'comic_no',
         'chapter_no',
         'chapter_url',

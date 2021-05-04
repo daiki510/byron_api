@@ -23,6 +23,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        //Comic
+        $this->app->bind(
+            \App\Repositories\Comic\ComicRepositoryInterface::class,
+            \App\Repositories\Comic\ComicRepository::class
+        );
+
+        //Chapter
+        $this->app->bind(
+            \App\Repositories\Chapter\ChapterRepositoryInterface::class,
+            \App\Repositories\Chapter\ChapterRepository::class
+        );
     }
 }

@@ -4,11 +4,28 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Repositories\Comic\ComicRepositoryInterface;
+use App\Repositories\Chapter\ChapterRepositoryInterface;
 use App\Models\Comic;
 use App\Models\Chapter;
 
 class ComicController extends Controller
 {
+    /**
+     * Undocumented function
+     *
+     * @param ComicRepositoryInterface $comic_repository
+     * @param ChapterRepositoryInterface $chapter_repository
+     */
+    public function __construct(
+        ComicRepositoryInterface $comic_repository,
+        ChapterRepositoryInterface $chapter_repository
+    )
+    {
+        $this->comic_repository = $comic_repository;
+        $this->chapter_repository = $chapter_repository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +33,6 @@ class ComicController extends Controller
      */
     public function index()
     {
-
         return 'テスト';
     }
 
@@ -28,15 +44,36 @@ class ComicController extends Controller
      */
     public function store(Request $request)
     {
-        var_export($request->request->all());
         /**
         * TODO:
-        * 1. リクエストより対象漫画の特定
-        * 2. 最新チャプターの登録 or 最新ではなかったときの処理
-        * 3. レスポンス (例外処理含む)
-        * リポジトリパターンで実装
-        * プロパティ名の変換
+        * ・バリデーション(chapter-noをユニークにする)
+        * ・例外処理
+        * ・Resourceクラスを使う
         */
-        return 'テスト';
+        //リクエストより対象漫画の特定
+        $comic = $this->comic_repository->getComicByTitle($request['title']);
+        //新着漫画の場合はDBへ登録
+        if (is_null($comic)) {
+            $comic = $this->comic_repository->createComic($request);
+        }
+
+        $latest_chapter = $this->chapter_repository->getLatestChapter($comic->id);
+        if ($latest_chapter->chapter_no === $request['chapterNo']) {
+            return $this->generateResponse($latest_chapter->toArray(), 303);
+        }
+        $latest_chapter = $this->chapter_repository->createLatestChapters($request, $comic);
+        
+        return $this->generateResponse($latest_chapter->toArray(), 200);
+    }
+
+    /**
+     * JSONレスポンスの生成
+     *
+     * @param Array $data
+     * @param Integer $code
+     * @return Json
+     */
+    public function generateResponse(Array $data, Int $code) {
+        return response()->json($data, $code);
     }
 }
