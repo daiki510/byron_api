@@ -46,22 +46,23 @@ class ComicController extends Controller
     {
         /**
         * TODO:
-        * ・バリデーション(chapter-noをユニークにする)
+        * ・バリデーション
         * ・例外処理
         * ・Resourceクラスを使う
         */
         //リクエストより対象漫画の特定
-        $comic = $this->comic_repository->getComicByTitle($request['title']);
+        $attributes = $this->getAttributes($request);
+        $comic = $this->comic_repository->getComicByTitle($attributes['title']);
         //新着漫画の場合はDBへ登録
         if (is_null($comic)) {
-            $comic = $this->comic_repository->createComic($request);
+            $comic = $this->comic_repository->createComic($attributes);
         }
 
         $latest_chapter = $this->chapter_repository->getLatestChapter($comic->id);
-        if ($latest_chapter->chapter_no === $request['chapterNo']) {
+        if (optional($latest_chapter)->chapter_no == $attributes['chapterNo']) {
             return $this->generateResponse($latest_chapter->toArray(), 303);
         }
-        $latest_chapter = $this->chapter_repository->createLatestChapters($request, $comic);
+        $latest_chapter = $this->chapter_repository->createLatestChapters($attributes, $comic->id);
         
         return $this->generateResponse($latest_chapter->toArray(), 200);
     }
@@ -73,7 +74,24 @@ class ComicController extends Controller
      * @param Integer $code
      * @return Json
      */
-    public function generateResponse(Array $data, Int $code) {
+    private function generateResponse(Array $data, Int $code) {
         return response()->json($data, $code);
+    }
+
+    /**
+     * リクエストより必要なプロパティのみを取得
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return Array
+     */
+    private function getAttributes(Request $request) {
+        return $request->only([
+            'title', 
+            'comicNo',
+            'comicUrl',
+            'chapterNo',
+            'chapterUrl',
+            'chapterTitle'
+        ]);
     }
 }

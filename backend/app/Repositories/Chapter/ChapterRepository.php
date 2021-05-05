@@ -3,6 +3,7 @@
 namespace App\Repositories\Chapter;
 
 use App\Models\Chapter;
+use App\Models\Comic;
 
 class ChapterRepository implements ChapterRepositoryInterface
 {
@@ -32,15 +33,16 @@ class ChapterRepository implements ChapterRepositoryInterface
     /**
      * リクエストよりchapterレコードの登録
      *
-     * @var request $request
+     * @var array $attributes
      * @return object
      */
-    public function createLatestChapters(Request $request, Comic $comic)
+    public function createLatestChapters(Array $attributes, Int $comic_id)
     {
-        return $comic->chapters()->create([
-            'chapter_no' => $request['chapterNo'],
-            'chapter_url' => $request['chapterUrl'],
-            'chapter_title' => $request['chapterTitle']
+        return $this->chapter->create([
+            'comic_id' => $comic_id,
+            'chapter_no' => $attributes['chapterNo'],
+            'chapter_url' => $attributes['chapterUrl'],
+            'chapter_title' => $attributes['chapterTitle']
         ]);
     }
 }

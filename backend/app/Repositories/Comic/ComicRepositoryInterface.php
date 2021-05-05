@@ -15,8 +15,8 @@ interface ComicRepositoryInterface
     /**
      * リクエストよりComicレコードの登録
      *
-     * @var Request $request
+     * @var  array $attributes
      * @return object
      */
-    public function createComic(Request $request);
+    public function createComic(Array $attributes);
 }

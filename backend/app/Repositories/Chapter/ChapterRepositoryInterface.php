@@ -15,8 +15,8 @@ interface ChapterRepositoryInterface
     /**
      * リクエストよりchapterレコードの登録
      *
-     * @var request $request
+     * @var array $attributes
      * @return object
      */
-    public function createLatestChapters(Request $request, Comic $comic);
+    public function createLatestChapters(Array $attributes, Int $comic_id);
 }

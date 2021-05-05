@@ -30,15 +30,15 @@ class ComicRepository implements ComicRepositoryInterface
     /**
      * リクエストよりComicレコードの登録
      *
-     * @var request $request
+     * @var array $attributes
      * @return object
      */
-    public function createComic(Request $request)
+    public function createComic(Array $attributes)
     {
         return $this->comic->create([
-          'title' => $request['title'],
-          'comic_no' => $request['comicNo'],
-          'url' => $request['comicUrl'],
+            'title' => $attributes['title'],
+            'comic_no' => $attributes['comicNo'],
+            'url' => $attributes['comicUrl'],
         ]);
     }
 }
