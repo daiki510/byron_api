@@ -33,7 +33,8 @@ class ComicController extends Controller
      */
     public function index()
     {
-        return 'テスト';
+        $comics = $this->comic_repository->getComicList();
+        return $this->generateResponse($comics->toArray(), 200);
     }
 
     /**
@@ -60,11 +61,11 @@ class ComicController extends Controller
 
         $latest_chapter = $this->chapter_repository->getLatestChapter($comic->id);
         if (optional($latest_chapter)->chapter_no == $attributes['chapterNo']) {
-            return $this->generateResponse($latest_chapter->toArray(), 303);
+            return $this->generateResponse($latest_chapter->toArray(), 200);
         }
         $latest_chapter = $this->chapter_repository->createLatestChapters($attributes, $comic->id);
         
-        return $this->generateResponse($latest_chapter->toArray(), 200);
+        return $this->generateResponse($latest_chapter->toArray(), 201);
     }
 
     /**

@@ -17,10 +17,26 @@ class ComicRepository implements ComicRepositoryInterface
     }
 
     /**
+     * Comicの全件を取得
+     *
+     * @return Collection
+     */
+    public function getComicList()
+    {
+        return $this->comic->all()
+            ->map(function ($item, $key) {
+                return [
+                    'title' => $item->title,
+                    'id' => $item->comic_no
+                ];
+            });
+    }
+
+    /**
      * Titleで対象レコードを取得
      *
      * @var string $title
-     * @return object
+     * @return Comic
      */
     public function getComicByTitle(String $title)
     {
@@ -31,7 +47,7 @@ class ComicRepository implements ComicRepositoryInterface
      * リクエストよりComicレコードの登録
      *
      * @var array $attributes
-     * @return object
+     * @return Comic
      */
     public function createComic(Array $attributes)
     {
