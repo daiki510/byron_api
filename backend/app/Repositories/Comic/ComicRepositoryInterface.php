@@ -19,7 +19,7 @@ interface ComicRepositoryInterface
      * @var string $title
      * @return Comic
      */
-    public function getComicByTitle(String $title): Comic;
+    public function getComicByTitle(String $title);
 
     /**
      * リクエストよりComicレコードの登録
@@ -27,5 +27,5 @@ interface ComicRepositoryInterface
      * @var  array $attributes
      * @return Comic
      */
-    public function createComic(Array $attributes): Comic;
+    public function createComic(Array $attributes);
 }
