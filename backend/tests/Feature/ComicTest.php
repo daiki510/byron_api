@@ -4,8 +4,9 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\Comic;
 
-class ExampleTest extends TestCase
+class ComicTest extends TestCase
 {
     /**
      * A basic test example.
@@ -14,8 +15,8 @@ class ExampleTest extends TestCase
      */
     public function test_example()
     {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
+        $comic = new Comic();
+        $response = $comic->chapters();
+        $this->assertSame(true, true);
     }
 }
